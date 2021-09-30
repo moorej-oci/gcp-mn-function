@@ -1,0 +1,51 @@
+plugins {
+    id("groovy") 
+    id("io.micronaut.library") version "1.5.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+}
+
+version = "0.1"
+group = "com.moorej"
+
+repositories {
+    mavenCentral()
+}
+
+micronaut {
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("com.moorej.*")
+    }
+}
+
+dependencies {
+    implementation("io.micronaut.gcp:micronaut-gcp-pubsub")
+    implementation("io.micronaut.groovy:micronaut-runtime-groovy")
+    implementation("javax.annotation:javax.annotation-api")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation("io.micronaut:micronaut-validation")
+
+    compileOnly("com.google.cloud.functions:functions-framework-api")
+
+    implementation("io.micronaut.gcp:micronaut-gcp-function")
+
+    testImplementation("com.google.cloud.functions:functions-framework-api")
+
+    testImplementation("io.micronaut:micronaut-http-client")
+
+    testImplementation("io.micronaut.servlet:micronaut-servlet-core")
+
+}
+
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("11")
+    targetCompatibility = JavaVersion.toVersion("11")
+}
+
+
+
+tasks.named("assemble") {
+    dependsOn(":shadowJar")
+}
